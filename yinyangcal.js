@@ -289,9 +289,27 @@ function addDayCells() {
     }
   }
 }
+function FillTodayDiv(){
+  let today = new Date();
+  today.setHours(0, 0, 0, 0);
+  let solar_date = new Date(today.valueOf());
+  let lunar_date = SolarToLunar(solar_date);
+  lunar_date.isYunMonth
+  let lunar_prefix = lunar_date
+.isYunMonth ? "윤": "";
+  changeText(elId('divTodaySol'),
+  solar_date.getFullYear() + "년 " +
+     (solar_date.getMonth() + 1) + "월 " +
+     solar_date.getDate() + "일");
+  changeText(elId('divTodayLun'),
+     "음력 " + lunar_prefix + 
+     (lunar_date.month + 1) + "월 " +
+     lunar_date.day + "일");
+}
 
 // 각 양식필드들에 관한 이벤트 핸들러 함수들
 function window_onload() {
+  FillTodayDiv();
   addDayCells();
   let today = new Date();
   let dcells = document.querySelectorAll(".daycell");
