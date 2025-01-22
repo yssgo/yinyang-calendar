@@ -140,3 +140,12 @@ textarea#holiList {
   background-color: blue;
   color: lightgray;
 }
+#divToday{
+  
+}
+#divTodaySol {
+  margin: 0.2em;
+}
+#divTodayLun {
+  margin: 0.2em;
+}
