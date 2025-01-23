@@ -2,7 +2,7 @@
 .LunarBlank {
   font-size:small;
   color:black;
-  font-weight:medium;
+  font-weight:normal;
 }
 .LunarExtra {
   font-size:small;
@@ -19,7 +19,7 @@
 }
 .SolarBlank {
   color:black;
-  font-weight:medium;
+  font-weight:normal;
 }
 .SolarSaturday {
   color:blue;
@@ -72,7 +72,7 @@ p.shortcut {
   text-align:center;
   vertical-align:middle
 }
-p.shortcut {
+p.shortcutt {
   text-align:center;
   vertical-align:middle
 }
@@ -141,11 +141,12 @@ textarea#holiList {
   color: lightgray;
 }
 #divToday{
-  
+  margin: 0.5rem;
 }
-#divTodaySol {
-  margin: 0.2em;
-}
-#divTodayLun {
-  margin: 0.2em;
+#TSolWrapper, #TLunWrapper{
+  line-height: 1.2;
+  margin: 0px;
+  color:black;
+  font-weight:bold;
+  font-size: xx-large;
 }

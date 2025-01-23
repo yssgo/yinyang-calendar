@@ -41,7 +41,10 @@ function changeText(el, t) {
   let tn = document.createTextNode(t);
   el.appendChild(tn);
 }
-
+function changeHtml(el, t) {
+  removeHtml(el);
+  el.innerHTML = t
+}
 // 페이지의 테이블에 계산된 달력 데이터를 삽입한다. (달력을 그린다.)
 class caldraw_class {
   addBr (el) {
@@ -309,43 +312,7 @@ function addDayCells() {
     }
   }
 }
-function FillTodayDiv(){
-  let today = new Date();
-  today.setHours(0, 0, 0, 0);
-  let solar_date = new Date(today.valueOf());
-  let lunar_date = SolarToLunar(solar_date);
-  lunar_date.isYunMonth
-  let lunar_prefix = lunar_date
-.isYunMonth ? "윤": "";
-  changeText(elId('divTodaySol'),
-  solar_date.getFullYear() + "년 " +
-     (solar_date.getMonth() + 1) + "월 " +
-     solar_date.getDate() + "일");
-  changeText(elId('divTodayLun'),
-     "음력 " + lunar_prefix + 
-     (lunar_date.month + 1) + "월 " +
-     lunar_date.day + "일");
-}
 
-// 각 양식필드들에 관한 이벤트 핸들러 함수들
-function window_onload() {
-  FillTodayDiv();
-  addDayCells();
-  let today = new Date();
-  let dcells = document.querySelectorAll(".daycell");
-  let iterable = dcells;
-  for (let ci = 0; ci < dcells.length; ci++) {
-    dcells[ci].height = "50";
-    dcells[ci].width = "70";
-  }
-  elId("txtYear").value = today.getFullYear();
-  elId("txtMonth").value = today.getMonth() + 1;
-  
-  today.setFullYear(elVal("txtYear"));
-  today.setMonth(elVal("txtMonth") - 1);
-  currentDate = new Date(today);
-  drawCalendar(currentDate);
-}
 
 function btNextMonth_onclick() {
   if (currentDate.getMonth() < 11) {
@@ -409,6 +376,53 @@ function ListHolidaysInMonth() {
   let holidaysInMonth = extractHolidayListInMonth(holidays, FullYear, Month);
   let MonthHolidaysText = makeHolidaysText(holidaysInMonth, FullYear, Month);
   changeText('holiList', MonthHolidaysText);
+}
+
+function FillTodayDiv(){
+  let today = new Date();
+  today.setHours(0, 0, 0, 0);
+  let solar_date = new Date(today.valueOf());
+  let lunar_date = SolarToLunar(solar_date);
+  lunar_date.isYunMonth
+  let lunar_prefix = lunar_date
+.isYunMonth ? "윤": "";
+  let Y = solar_date.getFullYear();
+  let M = solar_date.getMonth() + 1;
+  let D = solar_date.getDate();
+  let dow = solar_date.getDay();
+  let W = [..."일월화수목금토" ][dow];
+  let Ll = lunar_prefix;
+  let Lm = lunar_date.month + 1;
+  let Ld = lunar_date.day
+  changeText(
+    elId('TSol'),
+    `${Y}년 ${M}월 ${D}일`);
+  changeText(
+    elId('TDow'),
+    `${W}요일`);
+  changeText(
+    elId('TLun'),
+    `음력 ${Ll}${Lm}월 ${Ld}일`);
+}
+
+// 각 양식필드들에 관한 이벤트 핸들러 함수들
+function window_onload() {
+  FillTodayDiv();
+  addDayCells();
+  let today = new Date();
+  let dcells = document.querySelectorAll(".daycell");
+  let iterable = dcells;
+  for (let ci = 0; ci < dcells.length; ci++) {
+    dcells[ci].height = "50";
+    dcells[ci].width = "70";
+  }
+  elId("txtYear").value = today.getFullYear();
+  elId("txtMonth").value = today.getMonth() + 1;
+  
+  today.setFullYear(elVal("txtYear"));
+  today.setMonth(elVal("txtMonth") - 1);
+  currentDate = new Date(today);
+  drawCalendar(currentDate);
 }
 
 window.addEventListener (
