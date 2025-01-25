@@ -15,13 +15,11 @@ function elVal(id) {
   return elId(id).value;
 }
 function removeHtml(el) {
-  console.log(`removeHtml el=${el}`);
   while (el.hasChildNodes()) {
     el.removeChild(el.firstChild);
   }
 }
 function changeText(el, t) {
-  console.log(`changeText: el=${el}, t=${t}`);
   removeHtml(el);
   let tn = document.createTextNode(t);
   el.appendChild(tn);

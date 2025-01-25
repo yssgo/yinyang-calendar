@@ -197,10 +197,7 @@ solar_date);
         lunar_prefix = "윤";
       }
       let lundiv_id = "l" +
-(solar_day + week - 1);
-      console.log(`drawCalendar:(after solar_day =) do: lundiv_id=${lundiv_id}`);
-      console.log (`, elId(lundiv_id)=${elId(lundiv_id)}`);
-      
+(solar_day + week - 1);      
       changeText(elId(lundiv_id),
         lunar_prefix +
 (lunar_date.month + 1) +
