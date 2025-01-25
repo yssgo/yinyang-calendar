@@ -1,24 +1,20 @@
 import {
-  isleapyear,
-  endofmonth,
-  elId,elVal,removeHtml,
-  changeText,changeHtml
+    endofmonth,
 } from "./tool.mjs";
-
 export {
     LunarTable,
     LunarDate,
-    nDaysYear,
-    nDaysMonth,
-    YunMonth,
-    totalDays,
+    nDaysLunarYear,
+    nDaysLunarMonth,
+    LunarLeapMonth,
+    totalSolarDays,
     SolarToLunar
 };
 // http://blog.kurien.co.kr/516 댓글에서 소개한
 // http://onfaf.tistory.com/87 에서 얻은 소스
 'use strict';
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////
 // 양/음력 만년달력에 관한 소스입니다.
 // by Albeniz
 
@@ -76,14 +72,14 @@ class LunarDate {
 }
 
 //해당 음력년도의 전체 날짜를 반환하는 함수
-function nDaysYear(year) {
+function nDaysLunarYear(year) {
     let sum;
 
     sum = 0;
     for (let i = 0; i < 13; i++) {
         // 0이면 그 해에 없는 달/
-        if (0 != parseInt(LunarTable[year - 1881].charAt(i))) {
-            sum += 29 + (parseInt(LunarTable[year - 1881].charAt(i)) + 1) % 2;
+        if (0 != parseInt([...LunarTable[year - 1881]][i])) {
+            sum += 29 + (parseInt([...LunarTable[year - 1881]][i]) + 1) % 2;
         }
     }
 
@@ -91,14 +87,16 @@ function nDaysYear(year) {
 }
 
 //해당 음력 월의 날짜수를 반환하는 함수
-function nDaysMonth(lunar_date, solar_year) {
+function nDaysLunarMonth(lunar_date) {
     let nDays;
     if (lunar_date.year - 1881 < 0 || lunar_date.year - 1881 > LunarTable.length - 1) {
         return 0;
     }
     let yun;
-    if (lunar_date.month <= YunMonth(lunar_date.year) && !lunar_date.isYunMonth) yun = 0;
-    else yun = 1;
+    if (lunar_date.month <= LunarLeapMonth(lunar_date.year) && !lunar_date.isYunMonth)
+        yun = 0;
+    else
+        yun = 1;
 
 
     nDays = 29 + (parseInt(LunarTable[lunar_date.year - 1881].charAt(lunar_date.month + yun)) + 1) % 2;
@@ -107,7 +105,7 @@ function nDaysMonth(lunar_date, solar_year) {
 }
 
 // 해당 음력년도의 윤달넘버를 반환. 윤달이 없으면 12를 반환
-function YunMonth(year) {
+function LunarLeapMonth(year) {
     let yun;
     if ((year < 1881) || (year >= 2051)) {
         return 12;
@@ -124,13 +122,13 @@ function YunMonth(year) {
 }
 
 // 서기 1년 1월 1일 이후 지난 날짜수를 반환
-function totalDays(solar_date) {
+function totalSolarDays(solar_date) {
     let sum, tdays, nYears366;
     let soly = solar_date.getFullYear();
     sum = 0;
     let solm = solar_date.getMonth();
     for (let i = 0; i < solm; i++) {
-        sum = sum + endofmonth(soly, i+1);
+        sum = sum + endofmonth(soly, i + 1);
     }
 
     nYears366 = parseInt((soly - 1) / 4) - parseInt((soly - 1) / 100) + parseInt((soly - 1) / 400);
@@ -147,7 +145,7 @@ function SolarToLunar(solar_date) {
     let FIRST_DAY; // 서기 1년 1월 1일부터 음력 1881년 1월 1일까지 총 지난 날짜에 관한 변수
 
     FIRST_DAY = 686685;
-    nDays = totalDays(solar_date) - FIRST_DAY; //음력 1881년 1월 1일 이후 지난 날짜
+    nDays = totalSolarDays(solar_date) - FIRST_DAY; //음력 1881년 1월 1일 이후 지난 날짜
 
     let lunar_date = new LunarDate(); // 반환할 음력 날짜를 선언. 음력 첫날로 초기화
     lunar_date.year = 1881;
@@ -159,7 +157,7 @@ function SolarToLunar(solar_date) {
     // 이 루프가 종료됨과 동시에 음력데이터의 year속성은 현재 년도가 저장되게 된다.
     do {
         tmp = nDays;
-        nDays -= nDaysYear(lunar_date.year, solar_date.getFullYear());
+        nDays -= nDaysLunarYear(lunar_date.year, solar_date.getFullYear());
         if (nDays < 0) {
             nDays = tmp;
             break;
@@ -171,12 +169,12 @@ function SolarToLunar(solar_date) {
     // 만약에 다음루프에서 윤달이면 월을 증가시키는게 아니라 윤달 속성만 true로 설정.
     do {
         tmp = nDays;
-        nDays -= nDaysMonth(lunar_date);;
+        nDays -= nDaysLunarMonth(lunar_date);;
         if (nDays < 0) {
             nDays = tmp; break;
         }
 
-        if (lunar_date.month == YunMonth(lunar_date.year) && !lunar_date.isYunMonth) {
+        if (lunar_date.month == LunarLeapMonth(lunar_date.year) && !lunar_date.isYunMonth) {
             lunar_date.isYunMonth = true;
         }
         else {

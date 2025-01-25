@@ -2,10 +2,8 @@
 
 import {
   LunarDate,
-  //nDaysYear,
-  nDaysMonth,
-  YunMonth,
-  //totalDays,
+  nDaysLunarMonth,
+  LunarLeapMonth,
   SolarToLunar
 } from "./lunar.mjs";
 export {
@@ -16,7 +14,6 @@ export {
   extractHolidayListInMonth,
   makeHolidaysText,
   getHolidays
-
 };
 
 // Requirements:
@@ -61,9 +58,9 @@ function getBuddhaDay(nowYear, nowMonth) {
         return solar_day;
       }
     }
-    if (lunar_date.day >= nDaysMonth(lunar_date)) {
+    if (lunar_date.day >= nDaysLunarMonth(lunar_date)) {
       if (lunar_date.month < 11) {
-        if ((lunar_date.month == YunMonth(lunar_date.year))
+        if ((lunar_date.month == LunarLeapMonth(lunar_date.year))
           && !lunar_date.isYunMonth) {
           lunar_date.isYunMonth = true;
           lunar_date.day = 1;
@@ -135,9 +132,9 @@ function getSeolChu(nowYear) {
           break;
         }
       }
-      if (lunar_date.day >= nDaysMonth(lunar_date)) {
+      if (lunar_date.day >= nDaysLunarMonth(lunar_date)) {
         if (lunar_date.month < 11) {
-          if ((lunar_date.month == YunMonth(lunar_date.year)) && !lunar_date.isYunMonth) {
+          if ((lunar_date.month == LunarLeapMonth(lunar_date.year)) && !lunar_date.isYunMonth) {
             lunar_date.isYunMonth = true;
             lunar_date.day = 1;
           }
@@ -390,7 +387,7 @@ function extractHolidayListInMonth(holidays, FullYear, Month) {
   return monthHolis;
 }
 
-function makeHolidaysText(holidays, FullYear, Month) {
+function makeHolidaysText(holidays) {
   let t = ''
   for (let hi = 0; hi < holidays.length; hi++) {
     let h = a2holi(holidays[hi]);

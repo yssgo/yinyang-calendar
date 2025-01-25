@@ -1,21 +1,16 @@
 import {
-  //isleapyear,
   endofmonth,
-  elId,elVal,//removeHtml,
-  changeText,//changeHtml
+  elId,elVal,
+  changeText,
 } from "./tool.mjs";
 import {
   LunarDate,
-  nDaysMonth,
-  YunMonth,
-  totalDays,
+  nDaysLunarMonth,
+  LunarLeapMonth,
+  totalSolarDays,
   SolarToLunar
 } from "./lunar.mjs";
 import {
-  //getBuddhaDay,
-  //hasLunarDate,
-  //getSeolChu,
-  //getHolidaysSC,
   extractHolidayListInMonth,
   makeHolidaysText,
   getHolidays,
@@ -90,7 +85,7 @@ class caldraw_class {
     changeText(elId("curYear"), solar_date.getFullYear());
     changeText(elId("curMonth"), solar_date.getMonth() + 1);
 
-    week = (totalDays(solar_date) + 1) % 7; // 현재 월의 첫번째 날짜의 요일을 계산 (0:월, 1:화, 2:수...)
+    week = (totalSolarDays(solar_date) + 1) % 7; // 현재 월의 첫번째 날짜의 요일을 계산 (0:월, 1:화, 2:수...)
 
     // 달력의 첫번째 날짜까지의 빈공란을 그린다.
     for (let i = 0; i < week; i++) {
@@ -207,9 +202,9 @@ solar_date);
 .className = "LunarNormal";
 
       if (lunar_date.day >=
-nDaysMonth(lunar_date)) {
+nDaysLunarMonth(lunar_date)) {
         if (lunar_date.month < 11) {
-          if ((lunar_date.month == YunMonth(lunar_date.year))
+          if ((lunar_date.month == LunarLeapMonth(lunar_date.year))
             && !lunar_date.isYunMonth) {
             lunar_date.isYunMonth = true;
             lunar_date.day = 1;
@@ -388,7 +383,7 @@ function ListHolidaysInMonth() {
   let Month = currentDate.getMonth() + 1;
   let holidays = getHolidays(FullYear);
   let holidaysInMonth = extractHolidayListInMonth(holidays, FullYear, Month);
-  let MonthHolidaysText = makeHolidaysText(holidaysInMonth, FullYear, Month);
+  let MonthHolidaysText = makeHolidaysText(holidaysInMonth);
   changeText('holiList', MonthHolidaysText);
 }
 
@@ -425,7 +420,6 @@ function window_onload() {
   addDayCells();
   let today = new Date();
   let dcells = document.querySelectorAll(".daycell");
-  let iterable = dcells;
   for (let ci = 0; ci < dcells.length; ci++) {
     dcells[ci].height = "50";
     dcells[ci].width = "70";
